@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Của em yêu</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pacifico&family=Montserrat:wght@400;600&display=swap" rel="stylesheet"> 
+<style>
+    /* ------------------- CÁC THIẾT LẬP CHUNG ------------------- */
+    :root {
+        --heart-color: #FF007F; 
+        --primary-color: #ff4b4b;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #0d011f;
+        font-family: 'Dancing Script', cursive;
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden; 
+        color: white;
+        transition: background-color 2s ease;
+    }
+
+    /* ------------------- HIỆU ỨNG VŨ TRỤ ------------------- */
+    .universe-background { 
+        position: absolute; width: 100%; height: 100%;
+        background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        overflow: hidden; z-index: 0;
+        transition: background 3s ease;
+    }
+
+    .universe-background.romantic-mode {
+        background: radial-gradient(circle at center, #4a1c40 0%, #150020 100%);
+    }
+
+    /* Đom đóm */
+    .firefly {
+        position: absolute; width: 4px; height: 4px; background-color: #ffeb3b;
+        border-radius: 50%; box-shadow: 0 0 10px #ffeb3b, 0 0 20px #ffeb3b;
+        opacity: 0; animation: firefly-fly 15s infinite linear; pointer-events: none; z-index: 5;
+    }
+    @keyframes firefly-fly {
+        0% { transform: translate(0, 0); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { transform: translate(100px, -500px); opacity: 0; }
+    }
+
+    /* Sao băng */
+    .shooting-star {
+        position: absolute; top: 50%; left: 50%; height: 2px;
+        background: linear-gradient(-45deg, #5f91ff, rgba(0, 0, 255, 0));
+        filter: drop-shadow(0 0 6px #699bff);
+        animation: tail 3000ms ease-in-out infinite, shooting 3000ms ease-in-out infinite;
+    }
+    .shooting-star::before, .shooting-star::after {
+        content: ''; position: absolute; top: calc(50% - 1px); right: 0; height: 2px;
+        background: linear-gradient(-45deg, rgba(0, 0, 255, 0), #5f91ff, rgba(0, 0, 255, 0));
+        transform: translateX(50%) rotateZ(45deg); border-radius: 100%;
+        animation: shining 3000ms ease-in-out infinite;
+    }
+    @keyframes tail { 0% { width: 0; } 30% { width: 100px; } 100% { width: 0; } }
+    @keyframes shooting { 0% { transform: translateX(0) translateY(0) rotateZ(45deg); } 100% { transform: translateX(300px) translateY(300px) rotateZ(45deg); } }
+    @keyframes shining { 0% { width: 0; } 50% { width: 30px; } 100% { width: 0; } }
+    .s1 { top: 0; left: 50%; animation-delay: 1s; }
+    .s2 { top: 0; left: 20%; animation-delay: 3s; }
+    .s3 { top: 0; left: 80%; animation-delay: 5s; }
+    .s4 { top: 20%; left: 0; animation-delay: 7s; }
+
+    /* Trái tim nền */
+    .initial-heart {
+        position: absolute; width: var(--is); height: var(--is);
+        background: #FF007F; transform: rotate(-45deg); opacity: 0.8;
+        animation: float 10s infinite ease-in-out; z-index: 1; 
+    }
+    .initial-heart::before, .initial-heart::after {
+        content: ""; position: absolute; width: var(--is); height: var(--is); border-radius: 50%; background: #FF007F;
+    }
+    .initial-heart::before { top: calc(var(--is) * -0.5); left: 0; }
+    .initial-heart::after { left: calc(var(--is) * 0.5); top: 0; }
+    @keyframes float {
+        0% { transform: translateY(0) rotate(-45deg); opacity: 0.5; }
+        50% { transform: translateY(-20px) rotate(-30deg); opacity: 0.9; }
+        100% { transform: translateY(0) rotate(-60deg); opacity: 0.5; }
+    }
+    .h1 { top: 10%; left: 15%; --is: 30px; animation-duration: 12s; }
+    .h2 { bottom: 20%; right: 10%; --is: 20px; animation-duration: 8s; }
+    .h3 { top: 60%; left: 5%; --is: 40px; animation-duration: 10s; }
+
+    /* ------------------- ĐĂNG NHẬP ------------------- */
+    #login-container { 
+        display: flex; justify-content: center; align-items: center; width: 100%; height: 100vh; z-index: 100; position: relative;
+        transition: opacity 1s ease;
+    }
+    .login-box {
+        width: 350px; background-color: rgba(255, 75, 75, 0.9); padding: 25px; border-radius: 20px;
+        border: 3px solid #f000ff;
+        box-shadow: 0 0 10px 5px #ff69b4, 0 0 40px 10px rgba(255, 105, 180, 0.9);
+        text-align: center; animation: pulse 1.5s infinite alternate;
+    }
+    @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.02); } }
+    .input-field { width: 80%; padding: 12px; margin: 10px 0; border-radius: 15px; border: none; font-size: 18px; text-align: center; font-family: 'Montserrat', sans-serif; }
+    .btn { width: 85%; padding: 14px; margin-top: 20px; background-color: white; color: #ff4b4b; border: none; border-radius: 15px; font-size: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 4px #c9003c; font-family: 'Dancing Script', cursive; }
+    .btn:hover { background-color: #ffe3e3; transform: translateY(-2px); }
+
+    /* ------------------- 20 ẢNH BAY ------------------- */
+    #birthday-message-1 { display: none; width: 100%; height: 100%; position: absolute; z-index: 10; }
+    
+    #message-text {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 60;
+        color: #ffe3e3; text-shadow: 2px 2px 5px #ff4b4b; text-align: center; width: 100%; pointer-events: none; 
+    }
+    #message-text h1 { font-family: 'Pacifico', cursive; font-size: 70px; margin: 0; }
+    
+    #open-surprise-btn { 
+        pointer-events: auto; display: none; margin: 20px auto; 
+        width: 180px; padding: 10px; font-size: 18px; 
+    }
+
+    .floating-photo {
+        position: absolute; bottom: -30%; width: 140px; height: 190px;
+        border-radius: 10px; overflow: hidden; border: 3px solid white;
+        box-shadow: 0 0 15px rgba(255,255,255,0.5); cursor: pointer; 
+        transition: transform 0.3s; z-index: 20; opacity: 0; 
+        animation: float-up 40s infinite linear; animation-delay: var(--delay, 0s);
+    }
+    .floating-photo:hover { transform: scale(1.2) !important; z-index: 100; border-color: #f000ff; }
+    .floating-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+    @keyframes float-up {
+        0% { bottom: -30%; opacity: 0; transform: translateX(0) rotate(0deg); }
+        2% { opacity: 1; }
+        25% { bottom: 110%; opacity: 1; transform: translateX(20px) rotate(10deg); }
+        26% { opacity: 0; }
+        100% { bottom: 110%; opacity: 0; }
+    }
+
+    /* Vị trí ảnh */
+    .fp1{left:10%;--delay:0s}.fp2{left:80%;--delay:3s}.fp3{left:45%;--delay:6s}.fp4{left:20%;--delay:9s}
+    .fp5{left:70%;--delay:12s}.fp6{left:5%;--delay:15s}.fp7{left:90%;--delay:18s}.fp8{left:35%;--delay:21s}
+    .fp9{left:60%;--delay:24s}.fp10{left:15%;--delay:27s}.fp11{left:75%;--delay:30s}.fp12{left:50%;--delay:33s}
+    .fp13{left:25%;--delay:36s}.fp14{left:85%;--delay:39s}.fp15{left:40%;--delay:42s}.fp16{left:65%;--delay:45s}
+    .fp17{left:12%;--delay:48s}.fp18{left:92%;--delay:51s}.fp19{left:30%;--delay:54s}.fp20{left:55%;--delay:57s}
+
+    /* ------------------- MODAL, CÂY & THƯ ------------------- */
+    #photo-modal {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center;
+        flex-direction: column;
+    }
+    #modal-img { max-width: 90%; max-height: 70vh; border-radius: 10px; border: 5px solid white; }
+    #modal-caption { color: white; font-size: 30px; margin-top: 20px; font-family: 'Pacifico', cursive; text-align: center; }
+    .close-modal { position: absolute; top: 20px; right: 30px; color: white; font-size: 50px; cursor: pointer; }
+
+    #surprise-content-wrapper { display: none; width: 100%; height: 100%; position: absolute; z-index: 20; }
+    #surprise-container {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 90%; max-width: 1000px; height: 500px; z-index: 40;
+        display: flex; justify-content: space-around; align-items: center;
+    }
+    #love-tree-section, #letter-cover-section {
+        width: 45%; height: 100%; position: relative;
+        background: rgba(255, 255, 255, 0.1); border-radius: 15px;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); backdrop-filter: blur(5px);
+    }
+    
+    /* CSS CHO VIDEO */
+    #tree-gif {
+        position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
+        max-width: 80%; max-height: 60%; object-fit: contain;
+        opacity: 0; transition: opacity 2s ease-in;
+    }
+    #timeline-box { position: absolute; bottom: 20px; width: 100%; text-align: center; color: #ff4b4b; }
+    #timeline-box h2 { font-family: 'Montserrat', sans-serif; font-size: 24px; }
+
+    #letter-cover-section { display: flex; align-items: center; justify-content: center; cursor: pointer; background: #ff8c9a; transition: 0.3s; }
+    #letter-cover-section:hover { transform: scale(1.05); }
+    .letter-design { border: 4px dashed white; padding: 20px; border-radius: 10px; }
+    .letter-design p { font-size: 35px; color: white; margin: 0; }
+
+    #quiz-modal {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9); z-index: 300; align-items: center; justify-content: center;
+    }
+    .quiz-box {
+        background: white; width: 400px; padding: 30px; border-radius: 20px; text-align: center;
+        border: 4px solid #ff4b4b; color: #333;
+    }
+    .quiz-options button {
+        display: block; width: 100%; margin: 10px 0; padding: 10px;
+        background: #ffe3e3; border: 1px solid #ff4b4b; border-radius: 10px; cursor: pointer;
+        font-family: 'Montserrat', sans-serif; font-size: 16px; transition: 0.2s;
+    }
+    .quiz-options button:hover { background: #ff4b4b; color: white; }
+
+    #main-letter {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
+        width: 800px; height: 600px; background: #fffaf0; border-radius: 10px;
+        box-shadow: 0 0 50px rgba(0,0,0,0.8); z-index: 400; display: none;
+        padding: 40px; box-sizing: border-box; color: #333; overflow-y: auto;
+        opacity: 0; transition: all 0.5s;
+    }
+    #main-letter.active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    .letter-content { font-size: 22px; line-height: 1.6; color: #d6336c; }
+    .capsule-input {
+        width: 100%; height: 80px; padding: 10px; border: 2px solid #ff8c9a; border-radius: 10px;
+        font-family: 'Dancing Script', cursive; font-size: 20px; box-sizing: border-box;
+    }
+    .capsule-btn { background: #d6336c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; font-family: 'Montserrat', sans-serif; }
+
+    /* ================================================================= */
+    /* MOBILE RESPONSIVE */
+    /* ================================================================= */
+    @media (max-width: 768px) {
+        .login-box { width: 85%; padding: 20px; }
+        #message-text h1 { font-size: 40px; }
+        #message-text p { font-size: 16px; }
+        .floating-photo { width: 100px; height: 140px; }
+        #surprise-container { flex-direction: column; height: auto; width: 95%; top: 55%; }
+        #love-tree-section, #letter-cover-section { width: 100%; height: 250px; margin-bottom: 20px; }
+        #tree-gif { max-height: 50%; }
+        #timeline-box h2 { font-size: 20px; }
+        .quiz-box { width: 85%; }
+        #main-letter { width: 95%; height: 85vh; padding: 20px; }
+        .letter-content { font-size: 18px; } 
+        .letter-content img { width: 100px; height: 100px; } 
+        .close-modal { right: 10px; top: 10px; font-size: 40px; }
+    }
+</style>
+</head>
+<body>
+
+    <div class="universe-background" id="bg-layer">
+        <div class="star-field"></div>
+        <div class="shooting-star s1"></div>
+        <div class="shooting-star s2"></div>
+        <div class="shooting-star s3"></div>
+        <div class="shooting-star s4"></div>
+        <div id="firefly-container"></div>
+    </div>
+    
+    <div class="initial-heart h1"></div>
+    <div class="initial-heart h2"></div>
+    <div class="initial-heart h3"></div>
+
+    <div id="login-container">
+        <div class="login-box">
+            <h2 style="font-family: 'Pacifico'; color: white; margin-bottom: 20px;">Bất ngờ cho con vợ</h2>
+            <input class="input-field" type="text" id="username" placeholder="Tên đăng nhập">
+            <input class="input-field" type="password" id="password" placeholder="Mật khẩu">
+            <button class="btn" onclick="checkLogin()">Chắc chắn là đúng chưa</button>
+            <p id="error-message" style="color: rgb(0, 0, 0); display: none; margin-top: 10px;">Sai rồi con heo kia:)</p>
+        </div>
+    </div>
+
+    <div id="birthday-message-1">
+        <div id="message-text">
+            <h1>Chúc Mừng Sinh Nhật Em!</h1>
+            <p>(Tuổi 19 xinh đẹp nhe con vợ yêu)</p>
+            <button class="btn" id="open-surprise-btn" onclick="showSurpriseContent()">Bất ngờ</button>
+        </div>
+
+        <div class="floating-photo fp1" onclick="showMemory('thiệp.report/hinh1.jpg', 'Con vợ được anh tặng con dái:)')"><img src="thiệp.report/hinh1.jpg" alt="1"></div>
+        <div class="floating-photo fp2" onclick="showMemory('thiệp.report/hinh2.jpg', 'Tấm này hôm ngày đầu đi hẹn hò nè, em nhớ ở đây không?')"><img src="thiệp.report/hinh2.jpg" alt="2"></div>
+        <div class="floating-photo fp3" onclick="showMemory('thiệp.report/hinh3.jpg', '1 trong những tấm ảnh của em anh thích nhất á!')"><img src="thiệp.report/hinh3.jpg" alt="3"></div>
+        <div class="floating-photo fp4" onclick="showMemory('thiệp.report/hinh4.jpg', 'Anh chụp ảnh thì miễn chê. Vợ và Saigon')"><img src="thiệp.report/hinh4.jpg" alt="4"></div>
+        <div class="floating-photo fp5" onclick="showMemory('thiệp.report/hinh5.jpg', 'Đứng nhìn ai đó con vợ kia :D')"><img src="thiệp.report/hinh5.jpg" alt="5"></div>
+        <div class="floating-photo fp6" onclick="showMemory('thiệp.report/hinh6.jpg', 'Trời cái dáng nó .....!')"><img src="thiệp.report/hinh6.jpg" alt="6"></div>
+        <div class="floating-photo fp7" onclick="showMemory('thiệp.report/hinh7.jpg', 'Ui ảnh 18+')"><img src="thiệp.report/hinh7.jpg" alt="7"></div>
+        <div class="floating-photo fp8" onclick="showMemory('thiệp.report/hinh8.jpg', 'Dễ thường dữ trời!!!!!!!!!!')"><img src="thiệp.report/hinh8.jpg" alt="8"></div>
+        <div class="floating-photo fp9" onclick="showMemory('thiệp.report/hinh9.jpg', 'Chụp lén ai thế con heo:>')"><img src="thiệp.report/hinh9.jpg" alt="9"></div>
+        <div class="floating-photo fp10" onclick="showMemory('thiệp.report/hinh10.jpg', 'May có con vợ ngon:)))')"><img src="thiệp.report/hinh10.jpg" alt="10"></div>
+        <div class="floating-photo fp11" onclick="showMemory('thiệp.report/hinh11.jpg', 'ảnh 18+ nữa nè')"><img src="thiệp.report/hinh11.jpg" alt="11"></div>
+        <div class="floating-photo fp12" onclick="showMemory('thiệp.report/hinh12.jpg', 'Trời mỹ nữ nào đâyyy')"><img src="thiệp.report/hinh12.jpg" alt="12"></div>
+        <div class="floating-photo fp13" onclick="showMemory('thiệp.report/hinh13.jpg', 'Anh nuôi xong chắc cũng có béo lên ha')"><img src="thiệp.report/hinh13.jpg" alt="13"></div>
+        <div class="floating-photo fp14" onclick="showMemory('thiệp.report/hinh14.jpg', 'Tấm anh thích nhất này, nó therrrr')"><img src="thiệp.report/hinh14.jpg" alt="14"></div>
+        <div class="floating-photo fp15" onclick="showMemory('thiệp.report/hinh15.jpg', 'í dời kinh')"><img src="thiệp.report/hinh15.jpg" alt="15"></div>
+        <div class="floating-photo fp16" onclick="showMemory('thiệp.report/hinh16.jpg', 'Nhìn gì đấm giờ')"><img src="thiệp.report/hinh16.jpg" alt="16"></div>
+        <div class="floating-photo fp17" onclick="showMemory('thiệp.report/hinh17.jpg', 'Vợ gọi matcha à')"><img src="thiệp.report/hinh17.jpg" alt="17"></div>
+        <div class="floating-photo fp18" onclick="showMemory('thiệp.report/hinh18.jpg', 'Cho mượn cái áo về ngâm rượu coi :O')"><img src="thiệp.report/hinh18.jpg" alt="18"></div>
+        <div class="floating-photo fp19" onclick="showMemory('thiệp.report/hinh19.jpg', 'Nàng thơ nào đâyyy')"><img src="thiệp.report/hinh19.jpg" alt="19"></div>
+        <div class="floating-photo fp20" onclick="showMemory('thiệp.report/hinh20.jpg', 'oe ôi con vợ quyến rũ anh rồi')"><img src="thiệp.report/hinh20.jpg" alt="20"></div>
+    </div>
+
+    <div id="photo-modal" onclick="this.style.display='none'">
+        <span class="close-modal">&times;</span>
+        <img id="modal-img" src="" alt="">
+        <div id="modal-caption"></div>
+    </div>
+
+    <div id="surprise-content-wrapper">
+        <button class="btn" style="position: absolute; top: 10px; left: 10px; width: auto; z-index: 100; font-size: 14px; padding: 8px;" onclick="goBackToStars()">
+            ← Quay lại
+        </button>
+
+        <div id="surprise-container">
+            <div id="love-tree-section">
+                <video id="tree-gif" autoplay loop muted playsinline>
+                    <source src="thiệp.report/-.mp4" type="video/mp4">
+                    Trình duyệt không hỗ trợ video.
+                </video>
+                
+                <div id="timeline-box">
+                    <p>Chúng ta đã bên nhau được:</p>
+                    <h2 id="days-together">...</h2>
+                </div>
+            </div>
+
+            <div id="letter-cover-section" onclick="startQuiz()">
+                <div class="letter-design">
+                    <p>FOR YOU</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="quiz-modal">
+        <div class="quiz-box">
+            <h3 style="color: #ff4b4b; font-family: 'Pacifico'; font-size: 28px;">Trả lời đúng mới cho mở :></h3>
+            <p class="quiz-question" id="quiz-q">Câu hỏi ở đây</p>
+            <div class="quiz-options" id="quiz-opts">
+            </div>
+            <p id="quiz-feedback" style="color: red; display: none;">Ê nha con vk a nhắc e:))</p>
+        </div>
+    </div>
+
+    <div id="main-letter">
+        <div style="text-align: right;">
+            <button class="btn" style="width: auto; padding: 5px 15px; margin: 0;" onclick="closeLetter()">Đóng</button>
+        </div>
+        
+        <div class="letter-content">
+            <img src="thiệp.report/couple.jpg" style="width: 150px; height: 150px; object-fit: cover; float: right; margin: 0 0 10px 10px; border-radius: 10px; border: 2px solid #ff8c9a;" alt="Couple">
+            <p><strong>Gửi em yêu!!</strong></p>
+            <p>Vậy là hôm nay em già đi 1 tuổi rồi nhể. Về quê rồi nhớ anh hom ?</p>
+            <p>Cảm ơn em đã đến bên anh, bản thân anh là người ít nói và không hay thể hiện cảm xúc ra ngoài anh nhưng em đã mang lại nụ cười cho anh. Chúc em tuổi 19 thật rực rỡ, xinh đẹp và thành công nhé!</p>
+            <p>Anh mong em mai đây yêu anh nhiều hơn, chiều anh:)). Mong sau này 2 đứa bên nhau mãi mãi</p>
+            <p>Anh se mãi bên, yêu thương và che chở cho em.</p>
+            <p style="text-align: right; margin-top: 30px;">Yêu em nhiều,<br>Người yêu của em.</p>
+        </div>
+
+        <div class="time-capsule">
+            <h3>Gửi lời nhắn đến tương lai (1 năm sau):</h3>
+            <textarea id="capsule-msg" class="capsule-input" placeholder="Em muốn nhắn gì cho tụi mình năm sau không?. Hãy viết để có gì chúng ta cùng nhau đọc lại vào 1 năm sau nhé"></textarea>
+            <button class="btn capsule-btn" onclick="saveCapsule()">Gửi đến tương lai</button>
+        </div>
+    </div>
+
+    <audio id="bg-music" src="thiệp.report/[Karaoke] Nơi Này Có Anh - Sơn Tùng M-TP [Beat gốc].mp3" loop></audio>
+
+<script>
+    const START_DATE = new Date('2025-07-13T00:00:00'); 
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var video = document.getElementById('tree-gif');
+        if(video) {
+            video.addEventListener('ended', function() {
+                this.currentTime = 0;
+                this.play();
+            }, false);
+            video.play().catch(function(e) {
+                console.log("Video cần tương tác người dùng mới chạy được");
+            });
+        }
+    });
+
+    const questions = [
+        {
+            q: "Em có nhớ ngày mình lần đầu gặp nhau là ở đâu không ?",
+            options: ["Trước cửa nhà em", "Trước mixue", "Trước cửa phòng em :))))"],
+            correct: 1 
+        },
+        {
+            q: "Em đoán xem là ngày đầu gặp em đó là a nghĩ gì về em đi ?",
+            options: ["Đù má ngon", "Nhỏ này phiền thế", "Ui heo :))))))))))))"],
+            correct: 0
+        },
+        {
+            q: "Anh yêu em nhiều bao nhiêu ?",
+            options: ["Xíu xiu", "Vô cực", "Vừa đủ"],
+            correct: 1
+        }
+    ];
+
+    let currentQ = 0;
+    
+    function checkLogin() {
+        const u = document.getElementById('username').value.trim().toLowerCase();
+        const p = document.getElementById('password').value.trim();
+        if (u === 'nguyễn thị lệ thu' && p === '13022026') {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('birthday-message-1').style.display = 'block';
+            
+            document.getElementById('bg-layer').classList.add('romantic-mode');
+            createFireflies();
+
+            const audio = document.getElementById('bg-music');
+            audio.play().catch(e => console.log("Cần tương tác để phát nhạc"));
+            
+            setTimeout(() => {
+                document.getElementById('open-surprise-btn').style.display = 'block';
+            }, 2000);
+        } else {
+            document.getElementById('error-message').style.display = 'block';
+        }
+    }
+
+    function createFireflies() {
+        const container = document.getElementById('firefly-container');
+        for(let i=0; i<15; i++) {
+            const f = document.createElement('div');
+            f.className = 'firefly';
+            f.style.left = Math.random() * 100 + '%';
+            f.style.top = Math.random() * 100 + '%';
+            f.style.animationDelay = Math.random() * 5 + 's'; 
+            f.style.animationDuration = (10 + Math.random() * 10) + 's';
+            container.appendChild(f);
+        }
+    }
+
+    function showMemory(imgSrc, caption) {
+        document.getElementById('modal-img').src = imgSrc;
+        document.getElementById('modal-caption').innerText = caption;
+        document.getElementById('photo-modal').style.display = 'flex';
+    }
+
+    function showSurpriseContent() {
+        document.getElementById('birthday-message-1').style.display = 'none';
+        document.getElementById('surprise-content-wrapper').style.display = 'block';
+        plantTree();
+        setInterval(updateTimer, 1000);
+    }
+    
+    function goBackToStars() {
+        document.getElementById('surprise-content-wrapper').style.display = 'none';
+        document.getElementById('birthday-message-1').style.display = 'block';
+    }
+
+    function plantTree() {
+        const tree = document.getElementById('tree-gif');
+        setTimeout(() => {
+            tree.style.opacity = 1; 
+            tree.play(); 
+        }, 500);
+    }
+
+    function updateTimer() {
+        const now = new Date();
+        const diff = now - START_DATE;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / 1000 / 60) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+        document.getElementById('days-together').innerHTML = `${days} ngày <br> ${hours}:${mins}:${secs}`;
+    }
+
+    function startQuiz() {
+        currentQ = 0;
+        document.getElementById('quiz-modal').style.display = 'flex';
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        if (currentQ >= questions.length) {
+            document.getElementById('quiz-modal').style.display = 'none';
+            openLetter();
+            return;
+        }
+        const qData = questions[currentQ];
+        document.getElementById('quiz-q').innerText = `Câu ${currentQ + 1}: ${qData.q}`;
+        const optsDiv = document.getElementById('quiz-opts');
+        optsDiv.innerHTML = '';
+        qData.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(idx);
+            optsDiv.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selectedIdx) {
+        if (selectedIdx === questions[currentQ].correct) {
+            currentQ++;
+            document.getElementById('quiz-feedback').style.display = 'none';
+            loadQuestion();
+        } else {
+            document.getElementById('quiz-feedback').style.display = 'block';
+            document.getElementById('quiz-feedback').innerText = "Chán thế sai rồi kìa con vợ:(((";
+        }
+    }
+    
+    function openLetter() {
+        document.getElementById('surprise-content-wrapper').style.display = 'none';
+        const letter = document.getElementById('main-letter');
+        letter.style.display = 'block';
+        setTimeout(() => {
+            letter.classList.add('active'); 
+        }, 10);
+    }
+    
+    function closeLetter() {
+        const letter = document.getElementById('main-letter');
+        letter.classList.remove('active');
+        setTimeout(() => {
+            letter.style.display = 'none';
+            document.getElementById('surprise-content-wrapper').style.display = 'block'; 
+        }, 500); 
+    }
+
+// ===============================================
+    // HÀM GỬI QUA FORMSPREE (CÓ TRANG QUẢN LÝ RIÊNG)
+    // ===============================================
+    function saveCapsule() {
+        const msg = document.getElementById('capsule-msg').value;
+
+        // ⚠️ DÁN ĐƯỜNG LINK BẠN VỪA COPY Ở FORMSPREE VÀO DƯỚI ĐÂY:
+        const formUrl = "https://formspree.io/f/manrddnb"; 
+        
+        // Ví dụ nhìn nó sẽ như thế này: 
+        // const formUrl = "https://formspree.io/f/xmqzbwlo";
+
+        if(msg.trim() === "") {
+            alert("Em chưa viết gì kìa!");
+            return;
+        }
+
+        const btn = document.querySelector('.capsule-btn');
+        const originalText = btn.innerText;
+        btn.innerText = "Đang gửi...";
+        btn.disabled = true;
+
+        fetch(formUrl, {
+            method: "POST",
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                subject: "Capsule: Lời nhắn từ vợ yêu",
+                message: msg
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                // Gửi thành công!
+                alert("Đã gửi lời nhắn đến tương lai thành công! 1 năm sau kiểm tra nhé <3");
+                document.getElementById('capsule-msg').value = "Đã lưu bí mật!";
+                document.getElementById('capsule-msg').disabled = true;
+                btn.innerText = "Đã gửi";
+            } else {
+                alert("Có lỗi xảy ra. Em thử lại nhé!");
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            alert("Lỗi kết nối mạng!");
+            btn.innerText = originalText;
+            btn.disabled = false;
+        });
+    }
+</script>
+</body>
+</html>
